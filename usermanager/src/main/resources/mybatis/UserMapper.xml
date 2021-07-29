@@ -12,6 +12,17 @@
         </if>
         )
     </insert>
+    <insert id="regin">
+        insert into userinfo(username,name,password,sex,age,address,qq,email
+        <if test="isadmin != null">
+            ,isadmin
+        </if>
+        ) values (#{username},#{name},#{password},#{sex},#{age},#{address},#{qq},#{email}
+        <if test="isadmin != null">
+            ,#{isadmin}
+        </if>
+        )
+    </insert>
     <update id="update">
         update userinfo set name=#{name},sex=#{sex},age=#{age},address=#{address},qq=#{qq},email=#{email},isadmin=#{isadmin}
         where id=#{id}
@@ -22,6 +33,12 @@
         <if test="isadmin != null">
             and isadmin=#{isadmin}
         </if>
+    </delete>
+    <delete id="dels">
+        delete from userinfo where id in
+        <foreach collection="ids" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
     </delete>
 
 

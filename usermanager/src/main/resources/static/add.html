@@ -15,7 +15,7 @@
 <div class="container" style="width: 400px;">
     <h3 style="text-align: center;">添加用户</h3>
     <div class="form-group">
-        <label for="username">登录名：</label>
+        <label for="username">用户名：</label>
         <input type="text" class="form-control" id="username" name="username" placeholder="请输入登录名"/>
     </div>
 
@@ -59,6 +59,17 @@
             <option value="西安">西安</option>
             <option value="武汉">武汉</option>
             <option value="沧州">沧州</option>
+            <option value="延安">延安</option>
+            <option value="哈尔滨">哈尔滨</option>
+            <option value="天津">天津</option>
+            <option value="南京">南京</option>
+            <option value="长沙">长沙</option>
+            <option value="武汉">武汉</option>
+            <option value="沈阳">沈阳</option>
+            <option value="洛阳">洛阳</option>
+            <option value="银川">银川</option>
+            <option value="拉萨">拉萨</option>
+            <option value="乌鲁木齐">乌鲁木齐</option>
         </select>
     </div>
 
@@ -87,12 +98,13 @@
 </div>
 </body>
 <script>
-    jQuery.getJSON("/user/checkAdmin",{},function (data) {
-        if(data != null && data.data == 1) {
+    jQuery.getJSON("/user/checkAdmin", {}, function (data) {
+        if (data != null && data.data == 1) {
             //超级管理员
             jQuery("#adminDiv").show();
         }
     });
+
     //提交方法
     function mysub() {
         //非空校验
@@ -104,61 +116,66 @@
         var qq = jQuery("#qq");
         var email = jQuery("#email");
 
-        if(username.val().trim()=="") {
+        if (username.val().trim() == "") {
             alert("请先输入登录名");
             username.focus();
             return false;
         }
-        if(name.val().trim()=="") {
+        if (name.val().trim() == "") {
             alert("请先输入用户名");
             name.focus();
             return false;
         }
-        if(password.val().trim()=="") {
+        if (password.val().trim() == "") {
             alert("请先输入密码");
             password.focus();
             return false;
         }
-        if(password2.val().trim()=="") {
+        if (password2.val().trim() == "") {
             alert("请确认密码");
             password2.focus();
             return false;
         }
-        if(password.val().trim() != password2.val().trim()) {
+        if (password.val().trim() != password2.val().trim()) {
             alert("密码不一致");
             password.focus();
             return false;
         }
-        if(age.val().trim()=="") {
+        if (age.val().trim() == "") {
             alert("请先确认年龄");
             age.focus();
             return false;
         }
-        if(qq.val().trim()=="") {
+        if (qq.val().trim() == "") {
             alert("请先输入qq");
             qq.focus();
             return false;
         }
-        if(email.val().trim()=="") {
+        if (email.val().trim() == "") {
             alert("请先输入邮箱");
             email.focus();
             return false;
         }
 
         //提交数据到后端
-        jQuery.getJSON("/user/add",{
-            "username":username.val().trim(),
-            "name":name.val().trim(),
-            "password":password.val().trim(),
-            "sex":jQuery("input[name=sex]:checked").val(),
-            "address":jQuery("#address").val(),
-            "age":age.val().trim(),
-            "qq":qq.val().trim(),
-            "email":email.val().trim(),
-            "isadmin":jQuery("input[name=isadmin]:checked").val()
-        },function (data) {
-            if(data != null && data.status == 0 &&  data.data > 0) {
+        jQuery.getJSON("/user/add", {
+            "username": username.val().trim(),
+            "name": name.val().trim(),
+            "password": password.val().trim(),
+            "sex": jQuery("input[name=sex]:checked").val(),
+            "address": jQuery("#address").val(),
+            "age": age.val().trim(),
+            "qq": qq.val().trim(),
+            "email": email.val().trim(),
+            "isadmin": jQuery("input[name=isadmin]:checked").val()
+        }, function (data) {
+            if (data != null && data.status == 0 && data.data > 0) {
                 alert("添加成功");
+                if (confirm("是否继续添加？")) {
+                    location.href = location.href;
+                } else {
+                    location.href = "list.html";
+                }
             } else {
                 alert("添加失败" + data.message);
             }

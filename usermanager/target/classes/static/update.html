@@ -17,7 +17,7 @@
 <div class="container" style="width: 400px;">
     <h3 style="text-align: center;">修改用户</h3>
     <div class="form-group">
-        <label for="username">登录名：</label>
+        <label for="username">用户名：</label>
         <input type="text" class="form-control" id="username" name="username" readonly="readonly"/>
     </div>
 
@@ -51,6 +51,17 @@
             <option value="西安">西安</option>
             <option value="武汉">武汉</option>
             <option value="沧州">沧州</option>
+            <option value="延安">延安</option>
+            <option value="哈尔滨">哈尔滨</option>
+            <option value="天津">天津</option>
+            <option value="南京">南京</option>
+            <option value="长沙">长沙</option>
+            <option value="武汉">武汉</option>
+            <option value="沈阳">沈阳</option>
+            <option value="洛阳">洛阳</option>
+            <option value="银川">银川</option>
+            <option value="拉萨">拉萨</option>
+            <option value="乌鲁木齐">乌鲁木齐</option>
         </select>
     </div>
 
@@ -72,102 +83,116 @@
     </div>
 
     <div class="form-group" style="text-align: center">
-        <input id="btn_sub" class="btn btn-primary" type="button" value="提交" onclick="mysub()"/>
-        <input id="btn_reset" class="btn btn-box" type="button" value="重置" onclick="location.href=location.href"/>
+        <input id="btn_sub" class="btn btn-primary" type="button" value="提交" onclick="mysub(1)"/>
+        <input id="btn_reset" class="btn btn-box" type="button" value="重置" onclick="mysub(2)"/>
         <input id="btn_back" class="btn btn-default" type="button" value="返回" onclick="location.href='list.html'"/>
     </div>
 
 </div>
 </body>
-    <script>
-        //获取参数
-        function getParam(key) {
-            // 得到当前url中的参数 ?uid=xxx
-            var params = location.search;
-            params = params.substring(1); // uid=xxx
-            var paramArr = params.split("&");
-            for (var i = 0; i < paramArr.length; i++) {
-                var item = paramArr[i].split("=");
-                if (item[0] == key) {
-                    return item[1];
-                }
+<script>
+    //获取参数
+    function getParam(key) {
+        // 得到当前url中的参数 ?uid=xxx
+        var params = location.search;
+        params = params.substring(1); // uid=xxx
+        var paramArr = params.split("&");
+        for (var i = 0; i < paramArr.length; i++) {
+            var item = paramArr[i].split("=");
+            if (item[0] == key) {
+                return item[1];
             }
-            return null;
         }
-        //查询用户的详细信息
-        var uid = getParam("uid");
-        if(uid != null && uid > 0) {
-            jQuery.getJSON("/user/getuser",{"uid":uid},function (data) {
-                if(data != null && data.status == 0 && data.data.id > 0) {
-                    var userinfo = data.data;
-                    jQuery("#username").val(userinfo.username);
-                    jQuery("#name").val(userinfo.name);
-                    if(userinfo.sex == "男") {
-                        jQuery("#man").attr("checked","checked");
-                    } else if(userinfo.sex == "女") {
-                        jQuery("#woman").attr("checked","checked");
-                    }
-                    jQuery("#age").val(userinfo.age);
-                    jQuery("#address").val(userinfo.address);
-                    jQuery("#qq").val(userinfo.qq);
-                    jQuery("#email").val(userinfo.email);
+        return null;
+    }
 
-                } else {
-                    alert("查询失败");
+    //查询用户的详细信息
+    var uid = getParam("uid");
+    if (uid != null && uid > 0) {
+        jQuery.getJSON("/user/getuser", {"uid": uid}, function (data) {
+            if (data != null && data.status == 0 && data.data.id > 0) {
+                var userinfo = data.data;
+                jQuery("#username").val(userinfo.username);
+                jQuery("#name").val(userinfo.name);
+                if (userinfo.sex == "男") {
+                    jQuery("#man").attr("checked", "checked");
+                } else if (userinfo.sex == "女") {
+                    jQuery("#woman").attr("checked", "checked");
                 }
-            });
-        } else {
-            alert("无效参数");
-        }
+                jQuery("#age").val(userinfo.age);
+                jQuery("#address").val(userinfo.address);
+                jQuery("#qq").val(userinfo.qq);
+                jQuery("#email").val(userinfo.email);
 
-        function mysub() {
-            //非空校验
-            var name = jQuery("#name");
-            var age = jQuery("#age");
-            var qq = jQuery("#qq");
-            var email = jQuery("#email");
+            } else {
+                alert("查询失败");
+            }
+        });
+    } else {
+        alert("无效参数");
+    }
 
-            if(name.val().trim()=="") {
+    function mysub(type) {
+        //非空校验
+        var name = jQuery("#name");
+        var age = jQuery("#age");
+        var qq = jQuery("#qq");
+        var email = jQuery("#email");
+        if (type == 1) {
+            if (name.val().trim() == "") {
                 alert("请先输入用户名");
                 name.focus();
                 return false;
             }
 
-            if(age.val().trim()=="") {
+            if (age.val().trim() == "") {
                 alert("请先确认年龄");
                 age.focus();
                 return false;
             }
-            if(qq.val().trim()=="") {
+            if (qq.val().trim() == "") {
                 alert("请先输入qq");
                 qq.focus();
                 return false;
             }
-            if(email.val().trim()=="") {
+            if (email.val().trim() == "") {
                 alert("请先输入邮箱");
                 email.focus();
                 return false;
             }
 
-            //提交数据到后端
-            jQuery.getJSON("/user/update",{
-                "id":uid,
-                "name":name.val().trim(),
-                "sex":jQuery("input[name=sex]:checked").val(),
-                "address":jQuery("#address").val(),
-                "age":age.val().trim(),
-                "qq":qq.val().trim(),
-                "email":email.val().trim(),
-                "isadmin":jQuery("input[name=isadmin]:checked").val()
-            },function (data) {
-                if(data != null && data.status == 0 &&  data.data > 0) {
-                    alert("修改成功");
-                } else {
-                    alert("修改失败" + data.message);
-                }
-            });
+            if (confirm("是否确认修改？")) {
+                //提交数据到后端
+                jQuery.getJSON("/user/update", {
+                    "id": uid,
+                    "name": name.val().trim(),
+                    "sex": jQuery("input[name=sex]:checked").val(),
+                    "address": jQuery("#address").val(),
+                    "age": age.val().trim(),
+                    "qq": qq.val().trim(),
+                    "email": email.val().trim(),
+                    "isadmin": jQuery("input[name=isadmin]:checked").val()
+                }, function (data) {
+                    if (data != null && data.status == 0 && data.data > 0) {
+                        alert("修改成功");
+                        location.href = "list.html";
+                    } else {
+                        alert("修改失败" + data.message);
+                    }
+                });
+            } else {
+                location.href = location.href;
+            }
+
+        } else {
+            name.val("");
+            age.val("");
+            qq.val("");
+            email.val("");
         }
 
-    </script>
+    }
+
+</script>
 
 </html>

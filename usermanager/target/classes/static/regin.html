@@ -13,7 +13,7 @@
 </head>
 <body>
 <div class="container" style="width: 400px;">
-    <h3 style="text-align: center;">添加用户</h3>
+    <h3 style="text-align: center;">注册用户</h3>
     <div class="form-group">
         <label for="username">用户名：</label>
         <input type="text" class="form-control" id="username" name="username" placeholder="请输入登录名"/>
@@ -83,7 +83,7 @@
         <input type="text" id="email" class="form-control" name="email" placeholder="请输入邮箱地址"/>
     </div>
 
-    <div class="form-group" id="adminDiv" style="display: none;">
+    <div class="form-group" id="adminDiv">
         <label for="email">管理员：</label>
         <input id="admin_yes" type="radio" name="isadmin" value="1"/>是
         &nbsp;&nbsp;&nbsp;
@@ -98,12 +98,12 @@
 </div>
 </body>
 <script>
-    jQuery.getJSON("/user/checkAdmin", {}, function (data) {
-        if (data != null && data.data == 1) {
-            //超级管理员
-            jQuery("#adminDiv").show();
-        }
-    });
+    // jQuery.getJSON("/user/checkAdmin", {}, function (data) {
+    //     if (data != null && data.data == 1) {
+    //         //超级管理员
+    //         jQuery("#adminDiv").show();
+    //     }
+    // });
 
     //提交方法
     function mysub() {
@@ -158,7 +158,7 @@
         }
 
         //提交数据到后端
-        jQuery.getJSON("/user/add", {
+        jQuery.getJSON("/user/regin", {
             "username": username.val().trim(),
             "name": name.val().trim(),
             "password": password.val().trim(),
@@ -170,14 +170,10 @@
             "isadmin": jQuery("input[name=isadmin]:checked").val()
         }, function (data) {
             if (data != null && data.status == 0 && data.data > 0) {
-                alert("添加成功");
-                if (confirm("是否继续添加？")) {
-                    location.href = location.href;
-                } else {
-                    location.href = "list.html";
-                }
+                alert("注册成功");
+                location.href = "login.html";
             } else {
-                alert("添加失败" + data.message);
+                alert("注册失败" + data.message);
             }
         });
     }

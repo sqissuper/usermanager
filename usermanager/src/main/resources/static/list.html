@@ -40,7 +40,7 @@
     </div>
     <div style="float: right;margin-bottom: 15px">
         <a class="btn btn-primary" href="add.html">添加用户</a>
-        <a id="delete" class="btn btn-primary" href="javascript:del()">删除选中</a>
+        <a id="delete" class="btn btn-primary" href="javascript:delSel()">删除选中</a>
     </div>
     <table border="1" class="table table-bordered table-hover">
         <tr class="success">
@@ -138,7 +138,7 @@
             "cpage": cpage,
             "psize": psize
         }, function (data) {
-            if (data != null && data.data.list != null && data.data.list.length > 0) {
+            if (data != null && data.data != null && data.data.list != null && data.data.list.length > 0) {
                 //1.绑定列表顺序
                 var listHtml = "";
                 for (var i = 0; i < data.data.list.length; i++) {
@@ -194,6 +194,7 @@
     getData();
 
     function del(id) {
+
         if (confirm("是否进行删除？")) {
             jQuery.getJSON("/user/del", {"id": id}, function (data) {
                 if (data != null && data.data > 0) {
@@ -203,6 +204,33 @@
                     alert("删除失败,请重试" + "," + data.message);
                 }
             });
+        }
+    }
+
+    //删除多条信息
+    function delSel() {
+        var ids = "";//待删除用户集合
+        jQuery("#info").find("tr").each(function (i) {
+            if (jQuery(this).find("th:first").find("input").prop("checked") == true) {
+                ids += (jQuery(this).find("th:first").find("input").attr("id") + ",")
+            }
+        });
+
+        if (ids != "") {
+            if (confirm("是否确认删除？")) {
+                jQuery.getJSON("/user/dels", {"ids": ids}, function (data) {
+                    if (data != null && data.status == 0 && data.data > 0) {
+                        alert("删除成功");
+                        location.href = location.href;
+                    } else {
+                        alert("删除失败，请重试！");
+                    }
+                });
+            } else {
+                location.href = location.href;
+            }
+        } else {
+            alert("请选择要删除的数据");
         }
     }
 

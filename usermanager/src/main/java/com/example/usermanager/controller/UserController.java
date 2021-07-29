@@ -190,4 +190,23 @@ public class UserController {
         return new ResponseBody<>(0, "", res);
     }
 
+
+    /**
+     * 多条删除
+     */
+    @RequestMapping("/dels")
+    public ResponseBody<Integer> dels(String ids) {
+        int res = 0;
+        res = userMapper.dels(ids.split(","));
+        return new ResponseBody<>(0, "", res);
+    }
+
+    /**
+     * 注册
+     */
+    @RequestMapping("/regin")
+    public ResponseBody<Integer> regin(UserInfo userInfo) {
+        int data = userMapper.regin(userInfo);
+        return new ResponseBody<>(0, "", data);
+    }
 }
